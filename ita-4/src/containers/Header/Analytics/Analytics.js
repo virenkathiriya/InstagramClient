@@ -1,16 +1,21 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux'
+import {connect} from 'react-redux';
+import {Redirect} from 'react-router-dom';
 
 class Analytics extends Component {
     render() {
         let analytics = {}, analticsArray = [];
+
+        let redirect = null;
+        if(this.props.token === null){
+            redirect = <Redirect to="/auth"/>
+        }
         if (this.props.posts) {
             this.props.posts.map(post => {
                 let name = post.name;
                 analytics[name] = 0;
                 return true;
             });
-            console.log(analytics);
 
             this.props.posts.map(post => {
                 let name = post.name;
@@ -34,6 +39,7 @@ class Analytics extends Component {
         }
         return (
             <div style={{width: '500px', margin: '0 auto'}}>
+                {redirect}
                 <ul className="list-group">
                     {analyticsComponent}
                 </ul>
@@ -43,7 +49,8 @@ class Analytics extends Component {
 
 const mapStateToProps = state => {
     return {
-        posts: state.post.posts
+        posts: state.post.posts,
+        token: state.auth.token
     }
 }
 
